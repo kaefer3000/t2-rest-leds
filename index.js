@@ -1,5 +1,5 @@
 //
-// Serves the ambient and the relay module on HTTP.
+// Serves the LEDs on a REST interface.
 //
 // TODO: Other RDF serialisations
 // TODO: LDP headers and implementation streamlining
