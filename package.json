@@ -1,0 +1,16 @@
+{
+  "name": "t2-rest-led",
+  "version": "0.0.1",
+  "description": "A Tessel project to switch the Tessel's LEDs on and off using REST calls.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "",
+  "keywords": [
+    "Tessel", "REST", "Linked Data"
+  ],
+  "license": "MIT",
+  "dependencies" : { "morgan" : "*", "express" : "*", "body-parser" : "*" },
+  "readme": ""
+}
