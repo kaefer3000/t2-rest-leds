@@ -14,17 +14,28 @@ var express = require('express');
 var logger = require('morgan');
 // Load some parsers for HTTP message bodys
 var bodyParser = require('body-parser');
+// Load RDF
+var rdf = require('rdf-ext')
+// Load the RDF parsers for HTTP messages
+var rdfBodyParser = require('rdf-body-parser');
+var RdfXmlSerializer = require('rdf-serializer-rdfxml');
 
 // The root app
-var app = express();
+app = express();
+
+// Preparing to use my rdf/xml serialiser
+var formatparams = {};
+formatparams.serializers = new rdf.Serializers();
+formatparams.serializers['application/rdf+xml'] = RdfXmlSerializer;
+var formats = require('rdf-formats-common')(formatparams);
+
+var configuredBodyParser = rdfBodyParser({'defaultMediaType' : 'text/turtle', 'formats' : formats});
+
+app.use(configuredBodyParser);
+
 // The two routers for the sensors/actuators
 var ledApp   = express.Router({ 'strict' : true });
-ledApp.use(bodyParser.json({ 'type' : "*/*" }));
-
-app.use(function (req, res, next) {
-  res.header("Content-Type",'application/ld+json');
-  next();
-});
+ledApp.use(configuredBodyParser);
 
 // configuring the app
 app.set('json spaces', 2);
@@ -44,25 +55,53 @@ var redirectMissingTrailingSlash = function(request, response, next) {
 app.use("/led", ledApp);
 
 // LDP description of the root app
+var rootRdfGraph = rdf.createGraph();
+rootRdfGraph.addAll(
+  [
+    new rdf.Triple(
+      new rdf.NamedNode(''),
+      new rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+      new rdf.NamedNode('http://www.w3.org/ns/ldp#BasicContainer')),
+   new rdf.Triple(
+      new rdf.NamedNode(''),
+      new rdf.NamedNode('http://www.w3.org/ns/ldp#contains'),
+      new rdf.NamedNode('led/'))
+  ])
+
 app.all('/', redirectMissingTrailingSlash);
 app.get('/', function(request, response) {
-  response.json({
-    '@id' : '' ,
-    '@type' : 'http://www.w3.org/ns/ldp#BasicContainer' ,
-    'http://www.w3.org/ns/ldp#contains' : ['led/']
-  });
+  response.sendGraph(rootRdfGraph);
 });
 
 // LDP description of the the leds
+var ledRootGraph = rdf.createGraph();
+ledRootGraph.addAll(
+  [
+    new rdf.Triple(
+      new rdf.NamedNode(''),
+      new rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+      new rdf.NamedNode('http://www.w3.org/ns/ldp#BasicContainer')),
+   new rdf.Triple(
+      new rdf.NamedNode(''),
+      new rdf.NamedNode('http://www.w3.org/ns/ldp#contains'),
+      new rdf.NamedNode('0')),
+   new rdf.Triple(
+      new rdf.NamedNode(''),
+      new rdf.NamedNode('http://www.w3.org/ns/ldp#contains'),
+      new rdf.NamedNode('1')),
+   new rdf.Triple(
+      new rdf.NamedNode(''),
+      new rdf.NamedNode('http://www.w3.org/ns/ldp#contains'),
+      new rdf.NamedNode('2')),
+   new rdf.Triple(
+      new rdf.NamedNode(''),
+      new rdf.NamedNode('http://www.w3.org/ns/ldp#contains'),
+      new rdf.NamedNode('3'))
+  ])
 ledApp.route('/')
   .all(redirectMissingTrailingSlash)
   .get(function(request, response) {
-    response.json({
-      '@context' : { 'http://www.w3.org/ns/ldp#contains' : { '@type' : '@id'} },
-      '@id' : '' ,
-      '@type' : 'http://www.w3.org/ns/ldp#BasicContainer' ,
-      'http://www.w3.org/ns/ldp#contains' : [ '0', '1', '2', '3' ]
-    });
+    response.sendGraph(ledRootGraph);
   })
   .delete(function(request, response){
     for (i = 0; i <= 3; i++) {
@@ -72,18 +111,29 @@ ledApp.route('/')
   });
 
 // GETting the state of one led
+var ledBasicGraph = rdf.createGraph();
+ledBasicGraph.addAll(
+  [
+    new rdf.Triple(
+      new rdf.NamedNode('#led'),
+      new rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+      new rdf.NamedNode('http://purl.oclc.org/NET/UNIS/fiware/iot-lite#ActuatingDevice')),
+   new rdf.Triple(
+      new rdf.NamedNode('#led'),
+      new rdf.NamedNode('http://xmlns.com/foaf/0.1/isPrimaryTopicOf'),
+      new rdf.NamedNode(''))
+  ])
 ledApp.route("/:id").get(function(request, response) {
 
   id = Number(request.params.id);
 
   if (0 <= id && id <= 3) {
-    response.json({
-      '@context' : { 'http://xmlns.com/foaf/0.1/isPrimaryTopicOf' : { '@type' : '@id'} },
-      '@id' : '#actuator',
-      'http://xmlns.com/foaf/0.1/isPrimaryTopicOf' : '',
-      '@type' : 'http://purl.oclc.org/NET/UNIS/fiware/iot-lite#ActuatingDevice',
-      'http://example.org/isSwitchedOn' : tessel.led[id].isOn
-    });
+    response.sendGraph(ledBasicGraph.merge([
+          new rdf.Triple(
+            new rdf.NamedNode('#led'),
+            new rdf.NamedNode('http://example.org/isSwitchedOn'),
+            new rdf.Literal(tessel.led[id].isOn, null, 'http://www.w3.org/2001/XMLSchema#boolean'))
+        ]));
   } else {
     response.sendStatus(404);
   }
@@ -95,16 +145,32 @@ ledApp.route("/:id").put(function(request, response) {
   id = Number(request.params.id);
 
   if (0 <= id && id <= 3) {
-      var datatype = typeof request.body['http://example.org/isSwitchedOn'];
+      var targetStateTripleCount = 0;
+      var object;
+      request.graph.filter(
+        function(triple) {
+          return triple.predicate.nominalValue === 'http://example.org/isSwitchedOn'
+        }).forEach(function(triple) {
+          ++targetStateTripleCount;
+          // disabled:
+          // object = triple.object.valueOf();
+          object = triple.object.nominalValue;
+        })
+      if (targetStateTripleCount === 0 || targetStateTripleCount > 1) {
+          response.status(400);
+          response.send('Please supply exactly one triple with desired state');
+          return;
+      }
+      var datatype = typeof object;
       var targetState;
 
       switch (datatype) {
         case "boolean":
-          targetState = request.body['http://example.org/isSwitchedOn'];
+          targetState = object;
           break;
         case "string":
-          targetState = request.body['http://example.org/isSwitchedOn'].toLowerCase() == "true";
-          if (!targetState && request.body['http://example.org/isSwitchedOn'].toLowerCase() !== "false") {
+          targetState = object.toLowerCase() == "true";
+          if (!targetState && object.toLowerCase() !== "false") {
             response.status(400);
             response.send("Please supply something with a proper boolean value for the http://example.org/isSwitchedOn property");
             return;
@@ -139,31 +205,11 @@ ledApp.route("/:id").put(function(request, response) {
 });
 
 // Startup the server
-var port = 8080;
+var port = 80;
 app.listen(port, function () {
   console.log('Tessel2 LED REST app listening on port ' + port);
 });
 
 // For finding the server in the network, some handy output on the console
 console.log(require('os').networkInterfaces());
-
-// check mediatype of a request for json or json-ld
-var acceptJSONLDMediaType = function(req) {
-  var datatype = typeof req.headers['content-type'];
-  switch (datatype) {
-    case "string": 
-      var mediatype = req.headers['content-type'].toLowerCase();
-      if (mediatype.startsWith("application/ld+json")
-        || mediatype.startsWith("application/json"))
-        return true;
-      else
-        return false;
-      break;
-    default:
-      return false;
-    }
-};
-
-// accept any media type for a request
-var acceptAnyMediaType = function(req) { return true; };
 
