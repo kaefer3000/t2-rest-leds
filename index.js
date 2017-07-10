@@ -61,10 +61,6 @@ rootRdfGraph.addAll(
     new rdf.Triple(
       new rdf.NamedNode(''),
       new rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
-      new rdf.NamedNode('http://w3c.github.io/wot/w3c-wot-td-ontology.owl#Thing')),
-    new rdf.Triple(
-      new rdf.NamedNode(''),
-      new rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
       new rdf.NamedNode('http://www.w3.org/ns/sosa/Platform')),
    new rdf.Triple(
       new rdf.NamedNode(''),
