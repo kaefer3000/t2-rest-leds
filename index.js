@@ -61,6 +61,18 @@ rootRdfGraph.addAll(
     new rdf.Triple(
       new rdf.NamedNode(''),
       new rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+      new rdf.NamedNode('http://w3c.github.io/wot/w3c-wot-td-ontology.owl#Thing')),
+    new rdf.Triple(
+      new rdf.NamedNode(''),
+      new rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+      new rdf.NamedNode('http://www.w3.org/ns/sosa/Platform')),
+   new rdf.Triple(
+      new rdf.NamedNode(''),
+      new rdf.NamedNode('http://www.w3.org/ns/sosa/hosts'),
+      new rdf.NamedNode('led/')),
+    new rdf.Triple(
+      new rdf.NamedNode(''),
+      new rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
       new rdf.NamedNode('http://www.w3.org/ns/ldp#BasicContainer')),
    new rdf.Triple(
       new rdf.NamedNode(''),
@@ -96,7 +108,27 @@ ledRootGraph.addAll(
    new rdf.Triple(
       new rdf.NamedNode(''),
       new rdf.NamedNode('http://www.w3.org/ns/ldp#contains'),
-      new rdf.NamedNode('3'))
+      new rdf.NamedNode('3')),
+   new rdf.Triple(
+      new rdf.NamedNode(''),
+      new rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+      new rdf.NamedNode('http://www.w3.org/ns/sosa/Platform')),
+   new rdf.Triple(
+      new rdf.NamedNode(''),
+      new rdf.NamedNode('http://www.w3.org/ns/sosa/hosts'),
+      new rdf.NamedNode('0#led')),
+   new rdf.Triple(
+      new rdf.NamedNode(''),
+      new rdf.NamedNode('http://www.w3.org/ns/sosa/hosts'),
+      new rdf.NamedNode('1#led')),
+   new rdf.Triple(
+      new rdf.NamedNode(''),
+      new rdf.NamedNode('http://www.w3.org/ns/sosa/hosts'),
+      new rdf.NamedNode('2#led')),
+   new rdf.Triple(
+      new rdf.NamedNode(''),
+      new rdf.NamedNode('http://www.w3.org/ns/sosa/hosts'),
+      new rdf.NamedNode('3#led'))
   ])
 ledApp.route('/')
   .all(redirectMissingTrailingSlash)
