@@ -61,23 +61,11 @@ rootRdfGraph.addAll(
     new rdf.Triple(
       new rdf.NamedNode(''),
       new rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
-      new rdf.NamedNode('http://w3c.github.io/wot/w3c-wot-td-ontology.owl#Thing')),
-    new rdf.Triple(
-      new rdf.NamedNode(''),
-      new rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
-      new rdf.NamedNode('http://www.w3.org/ns/sosa/Platform')),
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#Thing')),
    new rdf.Triple(
       new rdf.NamedNode(''),
-      new rdf.NamedNode('http://www.w3.org/ns/sosa/hosts'),
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#associations'),
       new rdf.NamedNode('led/')),
-    new rdf.Triple(
-      new rdf.NamedNode(''),
-      new rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
-      new rdf.NamedNode('http://www.w3.org/ns/ldp#BasicContainer')),
-   new rdf.Triple(
-      new rdf.NamedNode(''),
-      new rdf.NamedNode('http://www.w3.org/ns/ldp#contains'),
-      new rdf.NamedNode('led/'))
   ])
 
 app.all('/', redirectMissingTrailingSlash);
@@ -85,50 +73,203 @@ app.get('/', function(request, response) {
   response.sendGraph(rootRdfGraph);
 });
 
+var int0href = new rdf.BlankNode('int0href');
+var int1href = new rdf.BlankNode('int1href');
+var int2href = new rdf.BlankNode('int2href');
+var int3href = new rdf.BlankNode('int3href');
+
 // LDP description of the the leds
 var ledRootGraph = rdf.createGraph();
 ledRootGraph.addAll(
   [
-    new rdf.Triple(
-      new rdf.NamedNode(''),
-      new rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
-      new rdf.NamedNode('http://www.w3.org/ns/ldp#BasicContainer')),
-   new rdf.Triple(
-      new rdf.NamedNode(''),
-      new rdf.NamedNode('http://www.w3.org/ns/ldp#contains'),
-      new rdf.NamedNode('0')),
-   new rdf.Triple(
-      new rdf.NamedNode(''),
-      new rdf.NamedNode('http://www.w3.org/ns/ldp#contains'),
-      new rdf.NamedNode('1')),
-   new rdf.Triple(
-      new rdf.NamedNode(''),
-      new rdf.NamedNode('http://www.w3.org/ns/ldp#contains'),
-      new rdf.NamedNode('2')),
-   new rdf.Triple(
-      new rdf.NamedNode(''),
-      new rdf.NamedNode('http://www.w3.org/ns/ldp#contains'),
-      new rdf.NamedNode('3')),
    new rdf.Triple(
       new rdf.NamedNode(''),
       new rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
-      new rdf.NamedNode('http://www.w3.org/ns/sosa/Platform')),
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#Thing')),
    new rdf.Triple(
       new rdf.NamedNode(''),
-      new rdf.NamedNode('http://www.w3.org/ns/sosa/hosts'),
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#name'),
+      new rdf.Literal('LEDs of a Tessel2')),
+
+   new rdf.Triple(
+      new rdf.NamedNode(''),
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#interactions'),
+      new rdf.NamedNode('#int0')),
+   new rdf.Triple(
+      new rdf.NamedNode('#int0'),
+      new rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#Property')),
+   new rdf.Triple(
+      new rdf.NamedNode('#int0'),
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#name'),
+      new rdf.Literal('interaction with LED 0')),
+   new rdf.Triple(
+      new rdf.NamedNode('#int0'),
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#outputData'),
+      new rdf.BlankNode('od0')),
+   new rdf.Triple(
+      new rdf.NamedNode('#int0'),
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#writable'),
+      new rdf.Literal(true, null, 'http://www.w3.org/2001/XMLSchema#boolean')),
+   new rdf.Triple(
+      new rdf.NamedNode('#int0'),
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#links'),
+      int0href),
+   new rdf.Triple(
+      int0href,
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#href'),
       new rdf.NamedNode('0#led')),
    new rdf.Triple(
+      int0href,
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#hasMediaType'),
+      new rdf.Literal('application/ld+json')),
+   new rdf.Triple(
+      int0href,
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#hasMediaType'),
+      new rdf.Literal('application/rdf+xml')),
+   new rdf.Triple(
+      int0href,
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#hasMediaType'),
+      new rdf.Literal('application/n-triples')),
+   new rdf.Triple(
+      int0href,
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#hasMediaType'),
+      new rdf.Literal('text/turtle')),
+
+   new rdf.Triple(
       new rdf.NamedNode(''),
-      new rdf.NamedNode('http://www.w3.org/ns/sosa/hosts'),
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#interactions'),
+      new rdf.NamedNode('#int1')),
+   new rdf.Triple(
+      new rdf.NamedNode('#int1'),
+      new rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#Property')),
+   new rdf.Triple(
+      new rdf.NamedNode('#int1'),
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#name'),
+      new rdf.Literal('interaction with LED 1')),
+   new rdf.Triple(
+      new rdf.NamedNode('#int1'),
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#outputData'),
+      new rdf.BlankNode('od1')),
+   new rdf.Triple(
+      new rdf.NamedNode('#int1'),
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#writable'),
+      new rdf.Literal(true, null, 'http://www.w3.org/2001/XMLSchema#boolean')),
+   new rdf.Triple(
+      new rdf.NamedNode('#int1'),
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#links'),
+      int1href),
+   new rdf.Triple(
+      int1href,
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#href'),
       new rdf.NamedNode('1#led')),
    new rdf.Triple(
-      new rdf.NamedNode(''),
-      new rdf.NamedNode('http://www.w3.org/ns/sosa/hosts'),
-      new rdf.NamedNode('2#led')),
+      int1href,
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#hasMediaType'),
+      new rdf.Literal('application/ld+json')),
+   new rdf.Triple(
+      int1href,
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#hasMediaType'),
+      new rdf.Literal('application/rdf+xml')),
+   new rdf.Triple(
+      int1href,
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#hasMediaType'),
+      new rdf.Literal('application/n-triples')),
+   new rdf.Triple(
+      int1href,
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#hasMediaType'),
+      new rdf.Literal('text/turtle')),
+
    new rdf.Triple(
       new rdf.NamedNode(''),
-      new rdf.NamedNode('http://www.w3.org/ns/sosa/hosts'),
-      new rdf.NamedNode('3#led'))
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#interactions'),
+      new rdf.NamedNode('#int2')),
+   new rdf.Triple(
+      new rdf.NamedNode('#int2'),
+      new rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#Property')),
+   new rdf.Triple(
+      new rdf.NamedNode('#int2'),
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#name'),
+      new rdf.Literal('interaction with LED 2')),
+   new rdf.Triple(
+      new rdf.NamedNode('#int2'),
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#outputData'),
+      new rdf.BlankNode('od2')),
+   new rdf.Triple(
+      new rdf.NamedNode('#int2'),
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#writable'),
+      new rdf.Literal(true, null, 'http://www.w3.org/2001/XMLSchema#boolean')),
+   new rdf.Triple(
+      new rdf.NamedNode('#int2'),
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#links'),
+      int2href),
+   new rdf.Triple(
+      int2href,
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#href'),
+      new rdf.NamedNode('2#led')),
+   new rdf.Triple(
+      int2href,
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#hasMediaType'),
+      new rdf.Literal('application/ld+json')),
+   new rdf.Triple(
+      int2href,
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#hasMediaType'),
+      new rdf.Literal('application/rdf+xml')),
+   new rdf.Triple(
+      int2href,
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#hasMediaType'),
+      new rdf.Literal('application/n-triples')),
+   new rdf.Triple(
+      int2href,
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#hasMediaType'),
+      new rdf.Literal('text/turtle')),
+
+   new rdf.Triple(
+      new rdf.NamedNode(''),
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#interactions'),
+      new rdf.NamedNode('#int3')),
+   new rdf.Triple(
+      new rdf.NamedNode('#int3'),
+      new rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#Property')),
+   new rdf.Triple(
+      new rdf.NamedNode('#int3'),
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#name'),
+      new rdf.Literal('interaction with LED 3')),
+   new rdf.Triple(
+      new rdf.NamedNode('#int3'),
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#outputData'),
+      new rdf.BlankNode('od3')),
+   new rdf.Triple(
+      new rdf.NamedNode('#int3'),
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#writable'),
+      new rdf.Literal(true, null, 'http://www.w3.org/2001/XMLSchema#boolean')),
+   new rdf.Triple(
+      new rdf.NamedNode('#int3'),
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#links'),
+      int3href),
+   new rdf.Triple(
+      int3href,
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#href'),
+      new rdf.NamedNode('3#led')),
+   new rdf.Triple(
+      int3href,
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#hasMediaType'),
+      new rdf.Literal('application/ld+json')),
+   new rdf.Triple(
+      int3href,
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#hasMediaType'),
+      new rdf.Literal('application/rdf+xml')),
+   new rdf.Triple(
+      int3href,
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#hasMediaType'),
+      new rdf.Literal('application/n-triples')),
+   new rdf.Triple(
+      int3href,
+      new rdf.NamedNode('http://iot.linkeddata.es/def/wot#hasMediaType'),
+      new rdf.Literal('text/turtle'))
   ])
 ledApp.route('/')
   .all(redirectMissingTrailingSlash)
