@@ -1,6 +1,12 @@
 # t2-rest-leds
 REST + Linked Data interface to the Tessel 2's LEDs.
 
+## Tessel 2
+A Tessel 2 is an IoT board that is programmable in JavaScript.
+The board comes with WiFi, Ethernet, some LEDs, and the possibility to attach modules.
+Here, we expose the LEDs on a REST interface, so all you need is a Tessel 2.
+The board is available in online shops, some of which are listed on the [Tessel project's home page](http://tessel.io/).
+
 ## Implementation details
 Serves RDF (in [JSON-LD](http://json-ld.org/), RDF/XML, Turtle, and N-Triples) on a REST interface. Built on the [Express](http://expressjs.com/) framework and [rdf-ext](http://github.com/rdf-ext). I extended rdf-ext to [produce RDF/XML](https://github.com/kaefer3000/rdf-serializer-rdfxml/) and to [properly ship N-Triples](https://github.com/kaefer3000/rdf-body-parser/). Describes the [Tessel 2](http://tessel.io/) using the following vocabularies: [SOSA](http://w3c.github.io/sdw/ssn/) and [SAREF](http://ontology.tno.nl/saref/).
 
@@ -43,3 +49,37 @@ Then connect to the WLAN with the SSID `Tessel-AP` and access the Tessel using t
 ```bash
 $ curl http://t2-rest-leds.lan/
 ```
+
+A GET request on the root URI returns a link to the array of LEDs.
+```turtle
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+
+<> a sosa:Platform;
+  sosa:hosts <led/> .
+```
+
+A GET request on the URI of the array of LEDs provides link to the individual LEDs.
+```turtle
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+
+<> a sosa:Platform ; 
+  sosa:hosts <0#led> , <1#led> , <2#led> , <3#led> .
+```
+
+A GET request on the URI of a LED returns information about the state of the LED.
+```turtle
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix saref: <https://w3id.org/saref#> .
+
+<#led> a saref:LightingDevice ; 
+  foaf:isPrimaryTopicOf <> ;
+  saref:hasState saref:On .
+```
+
+You can change the state of a LED using PUT requests with corresponding payload, eg.
+```turtle
+@prefix saref: <https://w3id.org/saref#> .
+
+<#led> saref:hasState saref:Off .
+```
+The other two triples in the previous examples are considerd as server-managed, ie. you do not need to send them in a PUT request.
