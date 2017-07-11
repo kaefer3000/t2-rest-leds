@@ -5,6 +5,7 @@ REST + Linked Data interface to the Tessel 2's LEDs.
 Serves RDF (in [JSON-LD](http://json-ld.org/), RDF/XML, Turtle, and N-Triples) on a REST interface. Built on the [Express](http://expressjs.com/) framework and [rdf-ext](http://github.com/rdf-ext). I extended rdf-ext to produce RDF/XML and to properly ship N-Triples. Describes the [Tessel 2](http://tessel.io/) using the following vocabularies: [SOSA](http://w3c.github.io/sdw/ssn/) and [SAREF](http://ontology.tno.nl/saref/).
 
 ## How to install
+Requirements: a [Node.js](https://nodejs.org/) installation with npm (the nodejs package manager), and the [Tessel CLI](https://tessel.github.io/t2-start/). [Curl](http://curl.haxx.se/) for testing.
 ```bash
 # Clone this repository
 $ git clone https://github.com/kaefer3000/t2-rest-leds/
