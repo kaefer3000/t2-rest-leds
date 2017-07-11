@@ -51,7 +51,7 @@ Then connect to the WLAN with the SSID `Tessel-AP` and access the Tessel using t
 $ curl http://t2-rest-leds.lan/
 ```
 ### Interaction with the device
-A GET request on the root URI returns a link to the LEDs' platform:
+A GET request on the root URI (`curl http://t2-rest-leds.lan/`) returns a link to the LEDs' platform:
 ```turtle
 @prefix sosa: <http://www.w3.org/ns/sosa/> .
 
@@ -59,7 +59,7 @@ A GET request on the root URI returns a link to the LEDs' platform:
   sosa:hosts <led/> .
 ```
 
-A GET request on the URI of the array of LEDs provides link to the individual LEDs:
+A GET request on the URI of the array of LEDs (`curl http://t2-rest-leds.lan/led/`) provides link to the individual LEDs:
 ```turtle
 @prefix sosa: <http://www.w3.org/ns/sosa/> .
 
@@ -67,7 +67,7 @@ A GET request on the URI of the array of LEDs provides link to the individual LE
   sosa:hosts <0#led> , <1#led> , <2#led> , <3#led> .
 ```
 
-A GET request on the URI of a LED returns information about the state of the LED (the LED is obviously off):
+A GET request on the URI of a LED (eg. `curl http://t2-rest-leds.lan/led/0`) returns information about the state of the LED (the LED is obviously off):
 ```turtle
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix saref: <https://w3id.org/saref#> .
@@ -78,8 +78,7 @@ A GET request on the URI of a LED returns information about the state of the LED
 ```
 
 You can change the state of a LED using PUT requests with corresponding payload (the other two triples in the previous examples are considerd as server-managed, ie. you do not need to send them in a PUT request), here we turn the LED on:
-```turtle
-@prefix saref: <https://w3id.org/saref#> .
-
-<#led> saref:hasState saref:On .
+```bash
+$ curl http://t2-rest-leds.lan/led/0 -X PUT -Hcontent-type:text/turtle \
+  --data-binary ' <#led> <https://w3id.org/saref#hasState> <https://w3id.org/saref#On> . '
 ```
