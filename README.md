@@ -2,7 +2,7 @@
 REST + Linked Data interface to the Tessel 2's LEDs.
 
 ## Implementation details
-Serves RDF, eg. in [JSON-LD](http://json-ld.org/), on a REST interface. Built on the [Express](http://expressjs.com/) framework and [rdf-ext](http://github.com/rdf-ext). Describes the [Tessel 2](http://tessel.io/) using the following vocabularies: [SOSA](http://w3c.github.io/sdw/ssn/) and [SAREF](http://ontology.tno.nl/saref/).
+Serves RDF, in [JSON-LD](http://json-ld.org/), RDF/XML, Turtle, and N-Triples, on a REST interface. Built on the [Express](http://expressjs.com/) framework and [rdf-ext](http://github.com/rdf-ext). Describes the [Tessel 2](http://tessel.io/) using the following vocabularies: [SOSA](http://w3c.github.io/sdw/ssn/) and [SAREF](http://ontology.tno.nl/saref/).
 
 Access the root resource like:
 ````
