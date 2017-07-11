@@ -37,7 +37,7 @@ The Tessel can work as an access point, you can configure it using the following
 $ t2 ap -n Tessel-AP -p topsecretpassw0rd -s psk2
 $ t2 ap --on
 ```
-Then connect to the WLAN with the SSID `Tessel-AP` and access the Tessel using:
+Then connect to the WLAN with the SSID `Tessel-AP` and access the Tessel using the IP that has been presented to you in the previous step, or using the hostname set above:
 ```bash
-$ curl http://t2-rest-leds/
+$ curl http://t2-rest-leds.lan/
 ```
