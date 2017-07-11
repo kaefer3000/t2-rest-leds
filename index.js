@@ -32,7 +32,7 @@ var configuredBodyParser = rdfBodyParser({'defaultMediaType' : 'text/turtle', 'f
 app.use(configuredBodyParser);
 
 // The two routers for the sensors/actuators
-var ledApp   = express.Router({ 'strict' : true });
+var ledApp = express.Router({ 'strict' : true });
 ledApp.use(configuredBodyParser);
 
 // configuring the app
@@ -52,7 +52,7 @@ var redirectMissingTrailingSlash = function(request, response, next) {
 // wiring the apps and routers
 app.use("/led", ledApp);
 
-// LDP description of the root app
+// description of the root app
 var rootRdfGraph = rdf.createGraph();
 rootRdfGraph.addAll(
   [
@@ -71,7 +71,7 @@ app.get('/', function(request, response) {
   response.sendGraph(rootRdfGraph);
 });
 
-// LDP description of the the leds
+// description of the the leds
 var ledRootGraph = rdf.createGraph();
 ledRootGraph.addAll(
   [
