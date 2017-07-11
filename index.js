@@ -1,8 +1,6 @@
 //
 // Serves the LEDs on a REST interface.
 //
-// TODO: Other RDF serialisations
-// TODO: LDP headers and implementation streamlining
 // Author: kaefer3000
 //
 
@@ -65,14 +63,6 @@ rootRdfGraph.addAll(
    new rdf.Triple(
       new rdf.NamedNode(''),
       new rdf.NamedNode('http://www.w3.org/ns/sosa/hosts'),
-      new rdf.NamedNode('led/')),
-    new rdf.Triple(
-      new rdf.NamedNode(''),
-      new rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
-      new rdf.NamedNode('http://www.w3.org/ns/ldp#BasicContainer')),
-   new rdf.Triple(
-      new rdf.NamedNode(''),
-      new rdf.NamedNode('http://www.w3.org/ns/ldp#contains'),
       new rdf.NamedNode('led/'))
   ])
 
@@ -85,26 +75,6 @@ app.get('/', function(request, response) {
 var ledRootGraph = rdf.createGraph();
 ledRootGraph.addAll(
   [
-    new rdf.Triple(
-      new rdf.NamedNode(''),
-      new rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
-      new rdf.NamedNode('http://www.w3.org/ns/ldp#BasicContainer')),
-   new rdf.Triple(
-      new rdf.NamedNode(''),
-      new rdf.NamedNode('http://www.w3.org/ns/ldp#contains'),
-      new rdf.NamedNode('0')),
-   new rdf.Triple(
-      new rdf.NamedNode(''),
-      new rdf.NamedNode('http://www.w3.org/ns/ldp#contains'),
-      new rdf.NamedNode('1')),
-   new rdf.Triple(
-      new rdf.NamedNode(''),
-      new rdf.NamedNode('http://www.w3.org/ns/ldp#contains'),
-      new rdf.NamedNode('2')),
-   new rdf.Triple(
-      new rdf.NamedNode(''),
-      new rdf.NamedNode('http://www.w3.org/ns/ldp#contains'),
-      new rdf.NamedNode('3')),
    new rdf.Triple(
       new rdf.NamedNode(''),
       new rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
@@ -145,7 +115,7 @@ ledBasicGraph.addAll(
     new rdf.Triple(
       new rdf.NamedNode('#led'),
       new rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
-      new rdf.NamedNode('http://purl.oclc.org/NET/UNIS/fiware/iot-lite#ActuatingDevice')),
+      new rdf.NamedNode('https://w3id.org/saref#LightingDevice')),
    new rdf.Triple(
       new rdf.NamedNode('#led'),
       new rdf.NamedNode('http://xmlns.com/foaf/0.1/isPrimaryTopicOf'),
@@ -156,12 +126,20 @@ ledApp.route("/:id").get(function(request, response) {
   id = Number(request.params.id);
 
   if (0 <= id && id <= 3) {
-    response.sendGraph(ledBasicGraph.merge([
-          new rdf.Triple(
-            new rdf.NamedNode('#led'),
-            new rdf.NamedNode('http://example.org/isSwitchedOn'),
-            new rdf.Literal(tessel.led[id].isOn, null, 'http://www.w3.org/2001/XMLSchema#boolean'))
-        ]));
+    var statetriple;
+
+    if (tessel.led[id].isOn)
+      statetriple = new rdf.Triple(
+                      new rdf.NamedNode('#led'),
+                      new rdf.NamedNode('https://w3id.org/saref#hasState'),
+                      new rdf.NamedNode('https://w3id.org/saref#On'));
+    else
+      statetriple = new rdf.Triple(
+                      new rdf.NamedNode('#led'),
+                      new rdf.NamedNode('https://w3id.org/saref#hasState'),
+                      new rdf.NamedNode('https://w3id.org/saref#Off'));
+
+    response.sendGraph(ledBasicGraph.merge([statetriple]));
   } else {
     response.sendStatus(404);
   }
@@ -174,45 +152,40 @@ ledApp.route("/:id").put(function(request, response) {
 
   if (0 <= id && id <= 3) {
       var targetStateTripleCount = 0;
-      var object;
+      var statetriple;
       request.graph.filter(
         function(triple) {
-          return triple.predicate.nominalValue === 'http://example.org/isSwitchedOn'
+          return triple.predicate.nominalValue === 'https://w3id.org/saref#hasState'
         }).forEach(function(triple) {
           ++targetStateTripleCount;
-          // disabled:
-          // object = triple.object.valueOf();
-          object = triple.object.nominalValue;
+          statetriple = triple;
         })
       if (targetStateTripleCount === 0 || targetStateTripleCount > 1) {
           response.status(400);
-          response.send('Please supply exactly one triple with desired state');
+          response.send('Please supply exactly one triple with desired state\n');
           return;
       }
-      var datatype = typeof object;
       var targetState;
 
-      switch (datatype) {
-        case "boolean":
-          targetState = object;
-          break;
-        case "string":
-          targetState = object.toLowerCase() == "true";
-          if (!targetState && object.toLowerCase() !== "false") {
+      if (statetriple.object.interfaceName === 'NamedNode') {
+        switch (statetriple.object.nominalValue) {
+          case "https://w3id.org/saref#On":
+            targetState = true;
+            break;
+          case "https://w3id.org/saref#Off":
+            targetState = false;
+            break;
+          default:
             response.status(400);
-            response.send("Please supply something with a proper boolean value for the http://example.org/isSwitchedOn property");
+            response.send('Please supply a triple with saref:hasState as predicate and saref:Off or saref:On as object\n');
             return;
-          }
-          break;
-        case "undefined":
-          response.status(400);
-          response.send("Please supply something with http://example.org/isSwitchedOn property (and give it a boolean value)");
-          return;
-        default:
-          response.status(400);
-          response.send("Please supply something with a proper boolean value for the http://example.org/isSwitchedOn property");
-          return;
+        }
+      } else {
+        response.status(400);
+        response.send('Please supply a triple with saref:hasState as predicate and saref:Off or saref:On as object\n');
+        return;
       }
+
       if (typeof targetState !== "boolean") {
         response.sendStatus(500);
       } else if (targetState !== tessel.led[id].isOn) {
