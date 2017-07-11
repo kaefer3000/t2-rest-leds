@@ -50,7 +50,7 @@ Then connect to the WLAN with the SSID `Tessel-AP` and access the Tessel using t
 $ curl http://t2-rest-leds.lan/
 ```
 
-A GET request on the root URI returns a link to the array of LEDs:
+A GET request on the root URI returns a link to the LEDs' platform:
 ```turtle
 @prefix sosa: <http://www.w3.org/ns/sosa/> .
 
