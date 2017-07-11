@@ -32,14 +32,15 @@ $ t2 push .
 ```
 
 ## How to use
-### LAN
+### Network Connection
+#### LAN
 Depending on your network set-up, you can access the root resource on the Tessel in the following manner.
 The Tessel automatically obtains an IP using DHCP.
 Maybe your local DNS uses hostnames to produce domain names (like `t2-rest-leds.lan`):
 ```bash
 $ curl http://tessel-ip-or-domain/
 ```
-### Tessel as WiFi Access Point
+#### Tessel as WiFi Access Point
 The Tessel can work as an access point, you can configure it using the following steps:
 ```bash
 $ t2 ap -n Tessel-AP -p topsecretpassw0rd -s psk2
@@ -49,7 +50,7 @@ Then connect to the WLAN with the SSID `Tessel-AP` and access the Tessel using t
 ```bash
 $ curl http://t2-rest-leds.lan/
 ```
-## Interaction with the device
+### Interaction with the device
 A GET request on the root URI returns a link to the LEDs' platform:
 ```turtle
 @prefix sosa: <http://www.w3.org/ns/sosa/> .
