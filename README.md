@@ -32,7 +32,7 @@ $ t2 push .
 ```
 
 ## How to use
-### Network Connection
+### Network Access to the device
 #### LAN
 Depending on your network set-up, you can access the root resource on the Tessel in the following manner.
 The Tessel automatically obtains an IP using DHCP.
