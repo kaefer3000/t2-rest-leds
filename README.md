@@ -53,17 +53,21 @@ $ curl http://t2-rest-leds.lan/
 ### Interaction with the device
 A GET request on the root URI (`curl http://t2-rest-leds.lan/`) returns a link to the LEDs' platform:
 ```turtle
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix sosa: <http://www.w3.org/ns/sosa/> .
 
-<> a sosa:Platform;
-  sosa:hosts <led/> .
+<#tessel2> a sosa:Platform ;
+  foaf:isPrimaryTopicOf <> ;
+  sosa:hosts <leds/#bar> .
 ```
 
-A GET request on the URI of the array of LEDs (`curl http://t2-rest-leds.lan/led/`) provides link to the individual LEDs:
+A GET request on the URI of the array of LEDs (`curl http://t2-rest-leds.lan/leds/`) provides link to the individual LEDs:
 ```turtle
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix sosa: <http://www.w3.org/ns/sosa/> .
 
-<> a sosa:Platform ; 
+<#bar> a sosa:Platform ;
+  foaf:isPrimaryTopicOf <> ; 
   sosa:hosts <0#led> , <1#led> , <2#led> , <3#led> .
 ```
 

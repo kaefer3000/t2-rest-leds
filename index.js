@@ -50,20 +50,24 @@ var redirectMissingTrailingSlash = function(request, response, next) {
 };
 
 // wiring the apps and routers
-app.use("/led", ledApp);
+app.use("/leds", ledApp);
 
 // description of the root app
 var rootRdfGraph = rdf.createGraph();
 rootRdfGraph.addAll(
   [
     new rdf.Triple(
-      new rdf.NamedNode(''),
+      new rdf.NamedNode('#tessel2'),
       new rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
       new rdf.NamedNode('http://www.w3.org/ns/sosa/Platform')),
    new rdf.Triple(
-      new rdf.NamedNode(''),
+      new rdf.NamedNode('#tessel2'),
+      new rdf.NamedNode('http://xmlns.com/foaf/0.1/isPrimaryTopicOf'),
+      new rdf.NamedNode('')),
+   new rdf.Triple(
+      new rdf.NamedNode('#tessel2'),
       new rdf.NamedNode('http://www.w3.org/ns/sosa/hosts'),
-      new rdf.NamedNode('led/'))
+      new rdf.NamedNode('leds/#bar'))
   ])
 
 app.all('/', redirectMissingTrailingSlash);
@@ -76,23 +80,27 @@ var ledRootGraph = rdf.createGraph();
 ledRootGraph.addAll(
   [
    new rdf.Triple(
-      new rdf.NamedNode(''),
+      new rdf.NamedNode('#bar'),
       new rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
       new rdf.NamedNode('http://www.w3.org/ns/sosa/Platform')),
    new rdf.Triple(
-      new rdf.NamedNode(''),
+      new rdf.NamedNode('#bar'),
+      new rdf.NamedNode('http://xmlns.com/foaf/0.1/isPrimaryTopicOf'),
+      new rdf.NamedNode('')),
+   new rdf.Triple(
+      new rdf.NamedNode('#bar'),
       new rdf.NamedNode('http://www.w3.org/ns/sosa/hosts'),
       new rdf.NamedNode('0#led')),
    new rdf.Triple(
-      new rdf.NamedNode(''),
+      new rdf.NamedNode('#bar'),
       new rdf.NamedNode('http://www.w3.org/ns/sosa/hosts'),
       new rdf.NamedNode('1#led')),
    new rdf.Triple(
-      new rdf.NamedNode(''),
+      new rdf.NamedNode('#bar'),
       new rdf.NamedNode('http://www.w3.org/ns/sosa/hosts'),
       new rdf.NamedNode('2#led')),
    new rdf.Triple(
-      new rdf.NamedNode(''),
+      new rdf.NamedNode('#bar'),
       new rdf.NamedNode('http://www.w3.org/ns/sosa/hosts'),
       new rdf.NamedNode('3#led'))
   ])
