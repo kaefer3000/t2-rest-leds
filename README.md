@@ -28,7 +28,8 @@ $ t2 push .
 ## How to use
 ### LAN
 Depending on your network set-up, you can access the root resource on the Tessel in the following manner.
-Maybe your local DNS uses the hostnames to produce domain names (like t2-rest-leds.lan):
+The Tessel automatically obtains an IP using DHCP.
+Maybe your local DNS uses hostnames to produce domain names (like `t2-rest-leds.lan`):
 ```bash
 $ curl http://tessel-ip-or-domain/
 ```
