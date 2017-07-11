@@ -1,12 +1,12 @@
 {
-  "name": "t2-rest-led",
+  "name": "t2-rest-leds",
   "version": "0.0.2",
   "description": "A Tessel project to switch the Tessel's LEDs on and off using REST calls.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": "",
+  "repository": "https://github.com/kaefer3000/t2-rest-leds",
   "keywords": [
     "Tessel", "REST", "Linked Data"
   ],
