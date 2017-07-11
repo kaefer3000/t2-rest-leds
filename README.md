@@ -66,19 +66,19 @@ A GET request on the URI of the array of LEDs provides link to the individual LE
   sosa:hosts <0#led> , <1#led> , <2#led> , <3#led> .
 ```
 
-A GET request on the URI of a LED returns information about the state of the LED:
+A GET request on the URI of a LED returns information about the state of the LED (the LED is obviously off):
 ```turtle
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix saref: <https://w3id.org/saref#> .
 
 <#led> a saref:LightingDevice ; 
   foaf:isPrimaryTopicOf <> ;
-  saref:hasState saref:On .
+  saref:hasState saref:Off .
 ```
 
-You can change the state of a LED using PUT requests with corresponding payload, eg. (the other two triples in the previous examples are considerd as server-managed, ie. you do not need to send them in a PUT request):
+You can change the state of a LED using PUT requests with corresponding payload (the other two triples in the previous examples are considerd as server-managed, ie. you do not need to send them in a PUT request), here we turn the LED on:
 ```turtle
 @prefix saref: <https://w3id.org/saref#> .
 
-<#led> saref:hasState saref:Off .
+<#led> saref:hasState saref:On .
 ```
