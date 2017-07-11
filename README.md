@@ -10,7 +10,7 @@ Requirements: a [Node.js](https://nodejs.org/) installation with npm (the nodejs
 # Clone this repository
 $ git clone https://github.com/kaefer3000/t2-rest-leds/
 
-# My rdf-ext changes have not made it into the official repository, so get my version of rdf-body-parser here
+# My rdf-ext changes have not made it into the official repository, so get my version of rdf-body-parser:
 $ git clone https://github.com/kaefer3000/rdf-body-parser/
 # Similarly, for my RDF/XML serializer
 $ git clone https://github.com/kaefer3000/rdf-serializer-rdfxml/
