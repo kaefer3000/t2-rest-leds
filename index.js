@@ -129,6 +129,18 @@ ledBasicGraph.addAll(
       new rdf.NamedNode('http://xmlns.com/foaf/0.1/isPrimaryTopicOf'),
       new rdf.NamedNode(''))
   ])
+var onTriple = new rdf.Triple(
+                      new rdf.NamedNode('#led'),
+                      new rdf.NamedNode('https://w3id.org/saref#hasState'),
+                      new rdf.NamedNode('https://w3id.org/saref#On'));
+var offTriple = new rdf.Triple(
+                      new rdf.NamedNode('#led'),
+                      new rdf.NamedNode('https://w3id.org/saref#hasState'),
+                      new rdf.NamedNode('https://w3id.org/saref#Off'));
+
+var ledGraphOn = ledBasicGraph.merge([onTriple]);
+var ledGraphOff = ledBasicGraph.merge([offTriple]);
+
 ledApp.route("/:id").get(function(request, response) {
 
   id = Number(request.params.id);
@@ -137,17 +149,10 @@ ledApp.route("/:id").get(function(request, response) {
     var statetriple;
 
     if (tessel.led[id].isOn)
-      statetriple = new rdf.Triple(
-                      new rdf.NamedNode('#led'),
-                      new rdf.NamedNode('https://w3id.org/saref#hasState'),
-                      new rdf.NamedNode('https://w3id.org/saref#On'));
+      response.sendGraph(ledGraphOn);
     else
-      statetriple = new rdf.Triple(
-                      new rdf.NamedNode('#led'),
-                      new rdf.NamedNode('https://w3id.org/saref#hasState'),
-                      new rdf.NamedNode('https://w3id.org/saref#Off'));
+      response.sendGraph(ledGraphOff);
 
-    response.sendGraph(ledBasicGraph.merge([statetriple]));
   } else {
     response.sendStatus(404);
   }
