@@ -1,0 +1,35 @@
+@prefix ex: <http://example.org/> .
+
+@prefix http: <http://www.w3.org/2011/http#>.
+@prefix http_m: <http://www.w3.org/2011/http-methods#>.
+@prefix ldp: <http://www.w3.org/ns/ldp#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+{ _:h http:mthd http_m:GET ; http:requestURI <http://t2-rest-leds.lan/leds/> . }
+{ ?x <http://www.w3.org/ns/sosa/hosts> ?y . } => { [] http:mthd http_m:GET; http:requestURI ?y . } . 
+
+{
+  <http://t2-rest-leds.lan/leds/2#led> <https://w3id.org/saref#hasState> <https://w3id.org/saref#Off> .
+}
+=>
+{ _:h http:mthd http_m:PUT ; http:requestURI <http://t2-rest-leds.lan/leds/2> ; http:body { <http://t2-rest-leds.lan/leds/2#led> <https://w3id.org/saref#hasState> <https://w3id.org/saref#On> . } . } .
+
+{
+  <http://t2-rest-leds.lan/leds/2#led> <https://w3id.org/saref#hasState> <https://w3id.org/saref#On> .
+}
+=>
+{ _:h http:mthd http_m:PUT ; http:requestURI <http://t2-rest-leds.lan/leds/2> ; http:body { <http://t2-rest-leds.lan/leds/2#led> <https://w3id.org/saref#hasState> <https://w3id.org/saref#Off> . } . } .
+
+{
+  <http://t2-rest-leds.lan/leds/2#led> <https://w3id.org/saref#hasState> <https://w3id.org/saref#On> .
+  <http://t2-rest-leds.lan/leds/3#led> <https://w3id.org/saref#hasState> <https://w3id.org/saref#Off> .
+}
+=>
+{ _:h http:mthd http_m:PUT ; http:requestURI <http://t2-rest-leds.lan/leds/3> ; http:body { <http://t2-rest-leds.lan/leds/2#led> <https://w3id.org/saref#hasState> <https://w3id.org/saref#On> . } . } .
+
+{
+  <http://t2-rest-leds.lan/leds/2#led> <https://w3id.org/saref#hasState> <https://w3id.org/saref#On> .
+  <http://t2-rest-leds.lan/leds/3#led> <https://w3id.org/saref#hasState> <https://w3id.org/saref#On> .
+}
+=>
+{ _:h http:mthd http_m:PUT ; http:requestURI <http://t2-rest-leds.lan/leds/3> ; http:body { <http://t2-rest-leds.lan/leds/2#led> <https://w3id.org/saref#hasState> <https://w3id.org/saref#Off> . } . } .
