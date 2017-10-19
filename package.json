@@ -11,6 +11,14 @@
     "Tessel", "REST", "Linked Data"
   ],
   "license": "MIT",
-  "dependencies" : { "express":"^4.14.0","morgan":"^1.7.0", "body-parser":"^1.15.2", "rdf-ext" : "^0.3.0", "rdf-serializer-rdfxml" : "file:../rdf-serializer-rdfxml","rdf-body-parser" : "file:../rdf-body-parser"},
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "morgan": "^1.7.0",
+    "rdf-body-parser": "file:../rdf-body-parser",
+    "rdf-formats-common": "^0.3.0",
+    "rdf-ext": "^0.3.0",
+    "rdf-serializer-rdfxml": "file:../rdf-serializer-rdfxml"
+  },
   "readme": ""
 }
